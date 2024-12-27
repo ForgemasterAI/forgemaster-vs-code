@@ -1,16 +1,32 @@
 {
   "name": "ForgemasterAI",
-  "displayName": "forgemaster-ai",
+  "displayName": "ForgemasterAI",
   "description": "",
-  "version": "0.0.1",
+  "version": "0.0.3",
+  "publisher": "forgemasterai",
+  "keywords": [
+    "AI",
+    "Note Management",
+    "Repository",
+    "Productivity",
+    "Automation"
+  ],
   "engines": {
     "vscode": "^1.96.0"
   },
   "categories": [
     "Other"
   ],
-
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ForgemasterAI/forgemaster-vs-code"
+  },
+  "homepage": "https://www.forgemaster.ai",
+  "bugs": {
+    "url": "https://github.com/ForgemasterAI/forgemaster-vs-code/issues"
+  },
   "main": "./dist/extension.js",
+  "icon": "media/logo.black.png",
   "activationEvents": [],
   "contributes": {
     "authentication": [
@@ -25,20 +41,30 @@
             "title": "Open Forgemaster Webview"
         },
         {
-            "command": "forgemaster-ai.showJwtPanel",
-            "title": "Forgemaster AI: Show JWT Panel"
-        },
-        {
-            "command": "forgemaster-ai.setJwt",
-            "title": "Forgemaster AI: Set JWT"
+          "command": "forgemaster-ai.sendSelection",
+          "title": "Send Selection to Forgemaster AI"
         }
     ],
+    "menus": {
+    "editor/context": [
+        {
+            "command": "forgemaster-ai.sendActiveFile",
+            "group": "navigation",
+            "when": "editorFocus"
+        },
+        {
+          "command": "forgemaster-ai.sendSelection",
+          "when": "editorHasSelection",
+          "group": "navigation"
+        }
+    ]
+    },
     "viewsContainers": {
         "activitybar": [
           {
             "id": "forgemaster-ai-view-container",
             "title": "Forgemaster AI",
-            "icon": "media/logo.svg"
+            "icon": "media/logo.black.png"
           }
         ]
       },
@@ -48,7 +74,7 @@
             "id": "forgemasterAI.sidebar",
             "name": "Forgemaster AI",
             "type": "webview",
-            "icon": "media/logo.svg",
+            "icon": "media/logo.black.png",
             "contextualTitle": "Forgemaster AI"
           }
         ]
