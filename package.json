@@ -1,8 +1,8 @@
 {
   "name": "ForgemasterAI",
   "displayName": "ForgemasterAI",
-  "description": "",
-  "version": "0.0.3",
+  "description": "Webview for Forgemaster AI",
+  "version": "0.0.4",
   "publisher": "forgemasterai",
   "keywords": [
     "AI",
@@ -39,25 +39,10 @@
         {
             "command": "forgemaster-ai.showWebview",
             "title": "Open Forgemaster Webview"
-        },
-        {
-          "command": "forgemaster-ai.sendSelection",
-          "title": "Send Selection to Forgemaster AI"
         }
     ],
     "menus": {
-    "editor/context": [
-        {
-            "command": "forgemaster-ai.sendActiveFile",
-            "group": "navigation",
-            "when": "editorFocus"
-        },
-        {
-          "command": "forgemaster-ai.sendSelection",
-          "when": "editorHasSelection",
-          "group": "navigation"
-        }
-    ]
+    "editor/context": []
     },
     "viewsContainers": {
         "activitybar": [
