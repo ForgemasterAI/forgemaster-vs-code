@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Full_logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 40">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #d7dae0;
+      }
+    </style>
+  </defs>
+  <path class="cls-1" d="M15.58,2.59v25.23c.8-1.81,1.81-3.52,2.97-5.08V5.56h20.45v2.62h-17.84v11.5c4.63-4.7,10.92-7.6,17.84-7.6v2.62c-12.93,0-23.42,11.29-23.42,25.28h-2.59V0h26.01v2.59H15.58Z"/>
+  <rect class="cls-1" x="12.99" y="39.97" width="2.59" height=".03"/>
+  <path class="cls-1" d="M21.16,40h-2.61c0-12.33,9.15-22.31,20.45-22.31v2.61c-9.86,0-17.84,8.81-17.84,19.7Z"/>
+</svg>

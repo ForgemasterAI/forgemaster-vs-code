@@ -2,7 +2,7 @@
   "name": "ForgemasterAI",
   "displayName": "ForgemasterAI",
   "description": "Webview for Forgemaster AI",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "publisher": "forgemasterai",
   "keywords": [
     "AI",
@@ -29,42 +29,58 @@
   "icon": "media/logo.black.png",
   "activationEvents": [],
   "contributes": {
+    "configuration": {
+      "title": "Forgemaster AI",
+      "type": "object",
+      "properties": {
+        "forgemasterAI.settings.appUrl": {
+          "type": "string",
+          "default": "http://localhost:5173",
+          "description": "URL for the Forgemaster AI application"
+        },
+        "forgemasterAI.settings.graphql.endpoint": {
+          "type": "string",
+          "default": "http://localhost:3030/graphql",
+          "description": "URL for the Forgemaster AI API"
+        }
+      }
+    },
     "authentication": [
-        {
-             "id": "forgemaster",
-              "label": "Forgemaster AI"
-        }
-      ],
+      {
+        "id": "forgemaster",
+        "label": "Forgemaster AI"
+      }
+    ],
     "commands": [
-        {
-            "command": "forgemaster-ai.showWebview",
-            "title": "Open Forgemaster Webview"
-        }
+      {
+        "command": "forgemaster-ai.showWebview",
+        "title": "Open Forgemaster Webview"
+      }
     ],
     "menus": {
-    "editor/context": []
+      "editor/context": []
     },
     "viewsContainers": {
-        "activitybar": [
-          {
-            "id": "forgemaster-ai-view-container",
-            "title": "Forgemaster AI",
-            "icon": "media/logo.black.png"
-          }
-        ]
-      },
+      "activitybar": [
+        {
+          "id": "forgemaster-ai-view-container",
+          "title": "Forgemaster AI",
+          "icon": "media/extension_logo.svg"
+        }
+      ]
+    },
     "views": {
-        "forgemaster-ai-view-container": [
-          {
-            "id": "forgemasterAI.sidebar",
-            "name": "Forgemaster AI",
-            "type": "webview",
-            "icon": "media/logo.black.png",
-            "contextualTitle": "Forgemaster AI"
-          }
-        ]
-      }
-},
+      "forgemaster-ai-view-container": [
+        {
+          "id": "forgemasterAI.sidebar",
+          "name": "Forgemaster AI",
+          "type": "webview",
+          "icon": "media/logo.black.png",
+          "contextualTitle": "Forgemaster AI"
+        }
+      ]
+    }
+  },
   "scripts": {
     "vscode:prepublish": "pnpm run package",
     "compile": "pnpm run check-types && pnpm run lint && node esbuild.js",
@@ -80,16 +96,19 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.96.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
+    "@types/vscode": "^1.96.0",
     "@typescript-eslint/eslint-plugin": "^8.17.0",
     "@typescript-eslint/parser": "^8.17.0",
-    "eslint": "^9.16.0",
-    "esbuild": "^0.24.0",
-    "npm-run-all": "^4.1.5",
-    "typescript": "^5.7.2",
     "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.4.1"
+    "@vscode/test-electron": "^2.4.1",
+    "esbuild": "^0.24.0",
+    "eslint": "^9.16.0",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "graphql": "^16.10.0"
   }
 }
