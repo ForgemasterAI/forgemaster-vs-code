@@ -40,6 +40,7 @@ export function isCodeValid(input: string): boolean {
     let symbolsFound = 0;
 
     // test keywords
+    // eslint-disable-next-line eqeqeq
     input.split(' ').map(n => n.replace('\n', '')).filter(n => n != '').forEach(word => {
         if (keywords.includes(word)) {
             keywordsFound++;
@@ -64,6 +65,7 @@ export function isCodeValid(input: string): boolean {
     let confidence = 0;
     confidence += bracketTotal > 0 ? .5 : -.5;
     confidence += input.length > 8 ? .5 : -.3;
+    // eslint-disable-next-line eqeqeq
     confidence += (inequality < 0 ? inequality / 10 : bracketTotal == 0 ? 0 : .3 * bracketTotal) * (20 / input.length);
     confidence += semicolons > 0 ? 1 : -.5;
     confidence += colons > 0 ? .2 : -.2;

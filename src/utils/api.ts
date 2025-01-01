@@ -50,7 +50,6 @@ export async function fetchCodeCompletion(codeContext: any, apiKey: string | und
     
     return data?.createCodeCompletion;
   } catch (error) {
-    debugger
     console.error('Error fetching code completion:', error);
     vscode.window.showErrorMessage(`Error fetching code completion: ${error}`);
     return undefined;
