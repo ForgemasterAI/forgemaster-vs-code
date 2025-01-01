@@ -39,10 +39,13 @@ export async function fetchCodeCompletion(codeContext: any, apiKey: string | und
         },
       }),
     });
+ 
+    const { data, errors } = await response.json() as any;
     
-    const { data } = await response.json() as any;
-    
-    if (data.errors) {
+
+        
+    if (data?.errors || errors) {
+      
       console.error('GraphQL Errors:', data.errors);
       vscode.window.showErrorMessage(`Code completion failed: ${data.errors.map((err: any) => err.message).join(', ')}`);
       return undefined;
@@ -50,6 +53,7 @@ export async function fetchCodeCompletion(codeContext: any, apiKey: string | und
     
     return data?.createCodeCompletion;
   } catch (error) {
+    
     console.error('Error fetching code completion:', error);
     vscode.window.showErrorMessage(`Error fetching code completion: ${error}`);
     return undefined;

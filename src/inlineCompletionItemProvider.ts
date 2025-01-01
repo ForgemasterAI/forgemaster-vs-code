@@ -11,6 +11,8 @@ import {
     window,
     SecretStorage,
     InlineCompletionList,
+    DocumentSymbol,
+    commands,
   } from "vscode";
 
 import { debounce, fetchCodeCompletion } from './utils/api';
@@ -104,6 +106,19 @@ export class InlineCompletionProvider extends EventEmitter implements InlineComp
         }
         const selection = window.activeTextEditor?.selection.isEmpty ? undefined : window.activeTextEditor?.selection;
         const imports = document.getText(new Range(0, 0, position.line, 0));
+        const editor = window.activeTextEditor;
+        let symbols: DocumentSymbol[] | undefined;
+    
+        if(editor) {
+                symbols = await commands.executeCommand('vscode.executeWorkspaceSymbolProvider', '');
+                symbols = symbols?.filter(symbol => {
+                    //@ts-ignore
+                    const range = symbol?.location?.range ?? symbol?.range; // Use location if available
+                    return range.start?.line <= position.line && range.end.line >= position.line;
+                });
+            
+        }
+
         console.debug(`imports: ${imports}`);
         const codeContext = {
             languageId: document.languageId,
@@ -111,6 +126,7 @@ export class InlineCompletionProvider extends EventEmitter implements InlineComp
             currentLine: line.text,
             imports,
             linesAfter,
+            ...(symbols ? { symbols } : {}),
             ...(selection ? { selectedText: document.getText(selection) } : {})
         };
 
