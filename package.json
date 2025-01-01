@@ -35,12 +35,12 @@
       "properties": {
         "forgemasterAI.settings.appUrl": {
           "type": "string",
-          "default": "http://localhost:5173",
+          "default": "https://app.forgemaster.ai",
           "description": "URL for the Forgemaster AI application"
         },
         "forgemasterAI.settings.graphql.endpoint": {
           "type": "string",
-          "default": "http://localhost:3030/graphql",
+          "default": "https://eu-api.forgemaster.ai/graphql",
           "description": "URL for the Forgemaster AI API"
         }
       }

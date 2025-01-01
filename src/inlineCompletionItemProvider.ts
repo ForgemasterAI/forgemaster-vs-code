@@ -15,6 +15,7 @@ import {
 
 import { debounce, fetchCodeCompletion } from './utils/api';
 import { EventEmitter } from "events";
+import { CompletionFormatter } from "./utils/completion-formatter";
 
 const debouncedFetch = debounce(fetchCodeCompletion, 300); // Debounce for 300ms
 
@@ -25,6 +26,20 @@ export class InlineCompletionProvider extends EventEmitter implements InlineComp
         console.debug('ForgemasterInlineCompletionItemProvider initialized');
     }
 
+    
+    private provideInlineCompletion(completion = '', startPosition: any, endPosition: any): InlineCompletionItem[] {
+        const editor = window.activeTextEditor;
+        if (!editor) {
+            return [];
+        }
+
+        const formattedCompletion = new CompletionFormatter(editor).format(completion);
+       
+        return [
+            new InlineCompletionItem(formattedCompletion, new Range(startPosition, endPosition))
+
+        ];
+    }
     async provideInlineCompletionItems(
         document: TextDocument,
         position: Position,
@@ -34,7 +49,7 @@ export class InlineCompletionProvider extends EventEmitter implements InlineComp
         const apiKey = await this.secrets.get('forgemasterAPIKey');
         console.debug('API Key:', apiKey);
     
-        const result: InlineCompletionList = {
+        let result: InlineCompletionList = {
             items: []
         };
         if (!apiKey) {
@@ -66,7 +81,7 @@ export class InlineCompletionProvider extends EventEmitter implements InlineComp
                 !endsWithNewLine
             )
         ) {
-            console.log('returning undefined because of trigger conditions');
+            console.debug('returning undefined because of trigger conditions');
             result.items = [];
         }
         // Extract the word to complete (more robust)
@@ -74,7 +89,7 @@ export class InlineCompletionProvider extends EventEmitter implements InlineComp
         const codeToComplete = wordMatch ? wordMatch[1] : '';
 
         if (!isCommentLine && !isInsideBlock && codeToComplete.length < 2) { // Require at least 2 characters to trigger for non-comments and outside blocks
-            console.log('returning undefined because of codeToComplete length');
+            console.debug('returning undefined because of codeToComplete length');
             result.items = [];
         }
 
@@ -88,56 +103,27 @@ export class InlineCompletionProvider extends EventEmitter implements InlineComp
             linesAfter.push(document.lineAt(i).text);
         }
         const selection = window.activeTextEditor?.selection.isEmpty ? undefined : window.activeTextEditor?.selection;
-
+        const imports = document.getText(new Range(0, 0, position.line, 0));
+        console.debug(`imports: ${imports}`);
         const codeContext = {
             languageId: document.languageId,
-            textBeforeCursor: textBeforeCursor,
+            textBeforeCursor,
             currentLine: line.text,
-            linesBefore: linesBefore,
-            linesAfter: linesAfter,
+            imports,
+            linesAfter,
             ...(selection ? { selectedText: document.getText(selection) } : {})
         };
 
-        const completion = await debouncedFetch(codeContext, codeToComplete, apiKey);
+        const completion = await debouncedFetch(codeContext, apiKey);
 
         if (completion) {
-   
-            let insertText = completion;
-            let endChar = position.character + completion.length;
-            let insertRange: Range = new Range(position, new Position(position.line, endChar));
-
-            if (!isCommentLine) {
-                // For non-comment lines, potentially replace the word being typed
-                const wordMatchForRange = textBeforeCursor.match(/([\w$]*)$/);
-                if (wordMatchForRange && wordMatchForRange[0].length > 0) {
-                    const wordToReplace = wordMatchForRange[0];
-                    const startChar = position.character - wordToReplace.length;
-                    console.debug('textBeforeCursor:', textBeforeCursor);
-                    console.debug('wordMatchForRange:', wordMatchForRange);
-                    console.debug('wordToReplace:', wordToReplace);
-                    console.debug('startChar:', startChar);
-                    const startPosition = new Position(position.line, startChar);
-                    insertRange = new Range(startPosition, position);
-                }
-            } else {
-                // For comment lines, maintain the insertion at the current position
-                const indentationMatch = line.text.match(/^\s*/);
-                const indentation = indentationMatch ? indentationMatch[0] : '';
-                insertText = indentation + completion;
-            }
-
-            result.items = [
-                {
-                    insertText: insertText,
-                    range: insertRange
-                }
-            ];
-
+     
+          const items  =  await this.provideInlineCompletion(completion, position, new Position(position.line, position.character + 1));
+          result.items = items;
+            
         } else {
             console.log('returning undefined');
         }
-
-        console.log('result', result.items.length > 0 ? result.items[0].insertText : 'No completion');
 
         return result;
     }

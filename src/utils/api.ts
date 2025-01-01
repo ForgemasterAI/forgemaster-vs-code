@@ -13,20 +13,19 @@ export function debounce<T extends (...args: any[]) => Promise<any>>(func: T, de
     };
 }
 
-const GRAPHQL_ENDPOINT = 'http://localhost:3030/graphql';
 
 // Replace with your actual GraphQL mutation string
 const CREATE_CODE_COMPLETION_MUTATION = `
-  mutation CreateCodeCompletion($codeContext: JSONObject!, $codeToComplete: String!) {
-    createCodeCompletion(codeContext: $codeContext, codeToComplete: $codeToComplete)
+  mutation CreateCodeCompletion($codeContext: JSONObject!) {
+    createCodeCompletion(codeContext: $codeContext)
   }
 `;
 
 // Function to make the GraphQL request
-export async function fetchCodeCompletion(codeContext: any, codeToComplete: string, apiKey: string | undefined): Promise<string | undefined> {
+export async function fetchCodeCompletion(codeContext: any, apiKey: string | undefined): Promise<string | undefined> {
   try {
-    console.log('API Key:', apiKey ? 'Provided' : 'Not Provided');
-
+    // get from config  "forgemasterAI.settings.graphql.endpoint"
+    const GRAPHQL_ENDPOINT = vscode.workspace.getConfiguration('forgemasterAI.settings').get('graphql.endpoint') as string;
     const response = await fetch(GRAPHQL_ENDPOINT, {
       method: 'POST',
       headers: {
@@ -36,14 +35,13 @@ export async function fetchCodeCompletion(codeContext: any, codeToComplete: stri
       body: JSON.stringify({
         query: CREATE_CODE_COMPLETION_MUTATION,
         variables: {
-          codeContext: codeContext,
-          codeToComplete: codeToComplete,
+          codeContext
         },
       }),
     });
     
-    const {data} = await response.json() as any;
-
+    const { data } = await response.json() as any;
+    
     if (data.errors) {
       console.error('GraphQL Errors:', data.errors);
       vscode.window.showErrorMessage(`Code completion failed: ${data.errors.map((err: any) => err.message).join(', ')}`);
@@ -52,6 +50,7 @@ export async function fetchCodeCompletion(codeContext: any, codeToComplete: stri
     
     return data?.createCodeCompletion;
   } catch (error) {
+    debugger
     console.error('Error fetching code completion:', error);
     vscode.window.showErrorMessage(`Error fetching code completion: ${error}`);
     return undefined;

@@ -39,8 +39,6 @@ class ForgemasterViewProvider implements vscode.WebviewViewProvider {
         
 
         webviewView.webview.onDidReceiveMessage(async message => {
-            console.log('Received message from webview:', message);
-
             switch (message.type) {
                 case 'openExternal':
                     vscode.env.openExternal(vscode.Uri.parse(message.url));
