@@ -25,7 +25,7 @@ const CREATE_CODE_COMPLETION_MUTATION = `
 export async function fetchCodeCompletion(codeContext: any, apiKey: string | undefined): Promise<string | undefined> {
   try {
     // get from config  "forgemasterAI.settings.graphql.endpoint"
-    const GRAPHQL_ENDPOINT = vscode.workspace.getConfiguration('forgemasterAI.settings').get('graphql.endpoint') as string;
+    const GRAPHQL_ENDPOINT =  process.env.GRAPHQL_ENDPOINT ??  vscode.workspace.getConfiguration('forgemasterAI.settings').get('graphql.endpoint') as string;
     const response = await fetch(GRAPHQL_ENDPOINT, {
       method: 'POST',
       headers: {

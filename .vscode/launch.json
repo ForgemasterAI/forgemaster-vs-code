@@ -17,7 +17,8 @@
 			],
 			"preLaunchTask": "${defaultBuildTask}",
 			"env": {
-				"FORGEMASTER_APP_URL": "http://localhost:5173"
+				"FORGEMASTER_APP_URL": "http://localhost:5173",
+				"GRAPHQL_ENDPOINT": "http://localhost:3030/graphql",
 			  }
 		}
 	]

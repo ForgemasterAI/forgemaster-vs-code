@@ -122,6 +122,7 @@ export class InlineCompletionProvider extends EventEmitter implements InlineComp
         console.debug(`imports: ${imports}`);
         const codeContext = {
             languageId: document.languageId,
+            linesBefore,
             textBeforeCursor,
             currentLine: line.text,
             imports,
